@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "vlp-service"
+version = "0.1.0"
+description = ""
+authors = ["Харицкий Данил Константинович <Khlive.ftf@gmail.com>"]
+readme = "README.md"
+packages = [{include = "vlp_service"}]
+
+[tool.poetry.dependencies]
+python = ">=3.11,<3.13"
+scipy = "^1.11.1"
+httpx = "^0.24.1"
+fastapi = {extras = ["all"], version = "^0.101.1"}
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

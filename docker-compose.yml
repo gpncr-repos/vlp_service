@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  vlp:
+    container_name: vlp
+    build:
+      dockerfile: ./docker/Dockerfile
+    ports:
+      - "8002:8002"
+    environment:
+      PVT_HOST: pvt
+      DEBUG: 0

@@ -1,5 +1,5 @@
 from calculations.pipe import calc_pipe, incl_func
-
+from copy import deepcopy
 
 def _convert_temperature(t, current, aim):
     if current == "C":
@@ -36,20 +36,21 @@ def calc_pwf(inclinometry: dict, casing: dict, tubing: dict, pvt: dict,
     :param h_res: глубина верхних дыр перфорации
     :return: забойное давление, атм
     """
-    pvt["t_res"] = _convert_temperature(pvt["t_res"], "C", "K")
+    copy_pvt = deepcopy(pvt)
+    copy_pvt["t_res"] = _convert_temperature(copy_pvt["t_res"], "C", "K")
     p_wh = _convert_pressure(p_wh, "atm", "pa")
-    pvt["wct"] /= 100
+    copy_pvt["wct"] = copy_pvt["wct"] / 100
 
     # Интерполяционный полином инклинометрии
     incl = incl_func(tuple(inclinometry["MD"]), tuple(inclinometry["TVD"]))
 
     # Расчёт давления на приеме (конце НКТ)
-    p_in = calc_pipe(tubing["d"], 0, tubing["h_mes"], incl, geo_grad, pvt,
+    p_in = calc_pipe(tubing["d"], 0, tubing["h_mes"], incl, geo_grad, copy_pvt,
                      p_wh,
                      incl(h_res).item(), q_liq)
 
     # Расчёт забойного давления
-    p_wf = calc_pipe(casing["d"], tubing["h_mes"], h_res, incl, geo_grad, pvt,
+    p_wf = calc_pipe(casing["d"], tubing["h_mes"], h_res, incl, geo_grad, copy_pvt,
                      p_in,
                      incl(h_res).item(), q_liq)
     return _convert_pressure(p_wf, 'pa', 'atm')
